@@ -148,9 +148,9 @@ impl System {
                 self.v[0xF] = !overflow as u8;
                 self.v[reg_x.idx()] = result;
             }
-            Instruction::Shr(reg_x) => {
-                self.v[0xF] = self.v[reg_x.idx()] & 0x1;
-                self.v[reg_x.idx()] >>= 1;
+            Instruction::Shr(reg_x, reg_y) => {
+                self.v[0xF] = self.v[reg_y.idx()] & 1;
+                self.v[reg_x.idx()] = self.v[reg_y.idx()] >> 1;
             }
             Instruction::Subb(reg_x, reg_y) => {
                 let value1 = self.v[reg_y.idx()];
@@ -161,9 +161,9 @@ impl System {
                 self.v[0xF] = !overflow as u8;
                 self.v[reg_x.idx()] = result;
             }
-            Instruction::Shl(reg_x) => {
-                self.v[0xF] = self.v[reg_x.idx()] >> 7;
-                self.v[reg_x.idx()] <<= 1;
+            Instruction::Shl(reg_x, reg_y) => {
+                self.v[0xF] = (self.v[reg_y.idx()] & 0x80) >> 7;
+                self.v[reg_x.idx()] = self.v[reg_y.idx()] << 1;
             }
             Instruction::SetIdx(addr) => self.i = addr,
             Instruction::JumpV0(addr) => return self.pc = addr.add(self.v[0].into()),
@@ -201,10 +201,12 @@ impl System {
             }
             Instruction::Store(reg) => {
                 self.memory.write(self.i, &self.v[..=reg.idx()]);
+                self.i = self.i.add(3);
             }
             Instruction::Load(reg) => {
                 let data = self.memory.read(self.i, 1 + reg.get() as u16);
                 self.v[..=reg.idx()].copy_from_slice(data);
+                self.i = self.i.add(3);
             }
         }
 

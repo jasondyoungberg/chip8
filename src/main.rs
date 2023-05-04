@@ -14,7 +14,7 @@ use output::*;
 use cpu::*;
 use system::*;
 
-const ROM_FILE: &str = "roms/test_rng.ch8";
+const ROM_FILE: &str = "roms/test.ch8";
 const DEBUG: bool = true;
 
 fn main() {

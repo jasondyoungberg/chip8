@@ -18,9 +18,9 @@ pub enum Instruction {
     Xor(Register, Register),      // 8XY3
     Add(Register, Register),      // 8XY4
     Sub(Register, Register),      // 8XY5
-    Shr(Register),                // 8XY6
+    Shr(Register, Register),      // 8XY6
     Subb(Register, Register),     // 8XY7
-    Shl(Register),                // 8XYE
+    Shl(Register, Register),      // 8XYE
     Neq(Register, Register),      // 9XY0
     SetIdx(Address),              // ANNN
     JumpV0(Address),              // BNNN
@@ -29,7 +29,7 @@ pub enum Instruction {
     KeyEq(Key),                   // EX9E
     KeyNeq(Key),                  // EXA1
     GetDelay(Register),           // FX07
-    WaitKey(Register),                 // FX0A
+    WaitKey(Register),            // FX0A
     SetDelay(Register),           // FX15
     SetSound(Register),           // FX18
     AddIdx(Register),             // FX1E
@@ -69,9 +69,9 @@ impl Instruction {
             (0x8, _ , _ ,0x3) => Some(Self::Xor(reg_x, reg_y)),
             (0x8, _ , _ ,0x4) => Some(Self::Add(reg_x, reg_y)),
             (0x8, _ , _ ,0x5) => Some(Self::Sub(reg_x, reg_y)),
-            (0x8, _ , _ ,0x6) => Some(Self::Shr(reg_x)),
+            (0x8, _ , _ ,0x6) => Some(Self::Shr(reg_x, reg_y)),
             (0x8, _ , _ ,0x7) => Some(Self::Subb(reg_x, reg_y)),
-            (0x8, _ , _ ,0xE) => Some(Self::Shl(reg_x)),
+            (0x8, _ , _ ,0xE) => Some(Self::Shl(reg_x, reg_y)),
             (0x9, _ , _ ,0x0) => Some(Self::Neq(reg_x, reg_y)),
             (0xA, _ , _ , _ ) => Some(Self::SetIdx(addr)),
             (0xB, _ , _ , _ ) => Some(Self::JumpV0(addr)),
@@ -111,9 +111,9 @@ impl std::fmt::Display for Instruction {
             Self::Xor(reg_x, reg_y)       => write!(f, "XOR {}, {}", reg_x, reg_y),
             Self::Add(reg_x, reg_y)       => write!(f, "ADD {}, {}", reg_x, reg_y),
             Self::Sub(reg_x, reg_y)       => write!(f, "SUB {}, {}", reg_x, reg_y),
-            Self::Shr(reg_x)              => write!(f, "SHR {}", reg_x),
+            Self::Shr(reg_x, reg_y)       => write!(f, "SHR {}, {}", reg_x, reg_y),
             Self::Subb(reg_x, reg_y)      => write!(f, "SUBB {}, {}", reg_x, reg_y),
-            Self::Shl(reg_x)              => write!(f, "SHL {}", reg_x),
+            Self::Shl(reg_x, reg_y)       => write!(f, "SHL {}, {}", reg_x, reg_y),
             Self::Neq(reg_x, reg_y)       => write!(f, "SKIP.NE {}, {}", reg_x, reg_y),
             Self::SetIdx(addr)            => write!(f, "MOV I, ${:03X}", addr.get()),
             Self::JumpV0(addr)            => write!(f, "JUMP V0 + ${:03X}", addr.get()),
