@@ -11,12 +11,6 @@ impl Key {
     pub fn idx(&self) -> usize { self.x as usize }
 }
 
-impl std::fmt::Display for Key {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "K{:X}", self.get())
-    }
-}
-
 #[derive(Debug)]
 pub struct Keypad {
     keys: [bool; 16],
@@ -31,7 +25,6 @@ impl Keypad {
         self.keys[key.idx()] = pressed;
     }
 
-    #[allow(unused_variables)]
     pub fn is_pressed(&self, key: Key) -> bool {
         self.keys[key.idx()]
     }
