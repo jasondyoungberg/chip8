@@ -1,11 +1,4 @@
-#[allow(dead_code)]
-pub enum RenderMode {
-    None,
-    Braille,
-    Ascii,
-    Block,
-}
-
+#[derive(Debug)]
 pub struct Screen {
     pixels: [[bool; 32]; 64],
 }

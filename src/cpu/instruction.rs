@@ -1,6 +1,7 @@
 use crate::cpu::{Address, Register};
 use crate::input::Key;
 
+#[derive(Debug, Clone, Copy)]
 pub enum Instruction {
     Clear,                        // 00E0
     Return,                       // 00EE
@@ -126,7 +127,7 @@ impl std::fmt::Display for Instruction {
             Self::SetSound(reg_x)         => write!(f, "MOV ST, {}", reg_x),
             Self::AddIdx(reg_x)           => write!(f, "ADD I, {}", reg_x),
             Self::SetSprite(reg_x)        => write!(f, "MOV I, {} * 5", reg_x),
-            Self::StoreBcd(reg_x)         => write!(f, "MOV B, {}", reg_x),
+            Self::StoreBcd(reg_x)         => write!(f, "BCD {}", reg_x),
             Self::Store(reg_x)            => write!(f, "MOV [I], ..{}", reg_x),
             Self::Load(reg_x)             => write!(f, "MOV ..{}, [I]", reg_x),
         }

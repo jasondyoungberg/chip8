@@ -5,6 +5,9 @@ use super::*;
 // https://en.wikipedia.org/wiki/CHIP-8
 // https://chip-8.github.io/links
 
+const CLOCK_HZ: f64 = 500.0;
+
+#[derive(Debug)]
 pub struct System {
     display: output::Screen,
     keypad: input::Keypad,
@@ -18,7 +21,8 @@ pub struct System {
     delay_timer: u8,
     sound_timer: u8,
 
-    time: u64,
+    clock_dt: f64,
+    timer_dt: f64,
 }
 
 impl System {
@@ -56,28 +60,42 @@ impl System {
             i: Address::new(0),
             v: [0; 16],
 
-            time: 0,
-
             delay_timer: 0,
             sound_timer: 0,
+
+            clock_dt: 0.0,
+            timer_dt: 0.0,
         }
     }
 
-    pub fn tick(&mut self) {
-        self.time += 1;
+    pub fn update(&mut self, dt: f64) {
+        self.clock_dt += dt;
+        self.timer_dt += dt;
 
-        if self.time % ((CLOCK_HZ/60) as u64) == 0 {
+        while self.clock_dt >= 1.0 / CLOCK_HZ {
+            self.clock_dt -= 1.0 / CLOCK_HZ;
+
+            let pc_old = self.pc;
+
+            let opcode = self.memory.read16(self.pc);
+            let instruction = Instruction::new(opcode).unwrap();
+            self.execute(instruction);
+
+            if DEBUG && pc_old != self.pc {
+                println!("[{:03X}]: {:04X} => {}", pc_old.get(), opcode, instruction);
+            }
+        }
+
+        while self.timer_dt >= 1.0 / 60.0 {
+            self.timer_dt -= 1.0 / 60.0;
+
             if self.delay_timer > 0 { self.delay_timer -= 1; }
             if self.sound_timer > 0 { self.sound_timer -= 1; }
         }
+    }
 
-        if DEBUG { print!("[{:03X}]", self.pc.get()); }
-        let opcode = self.memory.read16(self.pc);
-        if DEBUG { print!(": {:04X}", opcode); }
-        let instruction = Instruction::new(opcode).unwrap();
-        if DEBUG { print!(" -> {}", instruction); }
-        self.execute(instruction);
-        if DEBUG { println!(); }
+    pub fn update_keypad(&mut self, key: Key, pressed: bool) {
+        self.keypad.set_pressed(key, pressed);
     }
 
     pub fn get_pixels(&self) -> &[[bool; 32]; 64] { self.display.get_pixels() }
@@ -176,7 +194,7 @@ impl System {
             Instruction::SetDelay(reg) => self.delay_timer = self.v[reg.idx()],
             Instruction::SetSound(reg) => self.sound_timer = self.v[reg.idx()],
             Instruction::AddIdx(reg) => self.i = self.i.add(self.v[reg.idx()].into()),
-            Instruction::SetSprite(reg) => self.i = (self.v[reg.idx()] as u16 * 5).into(),
+            Instruction::SetSprite(reg) => self.i = (0x050 + self.v[reg.idx()] as u16 * 5).into(),
             Instruction::StoreBcd(reg) => {
                 let value = self.v[reg.idx()];
                 self.memory.write(self.i, &[value / 100, (value / 10) % 10, value % 10]);

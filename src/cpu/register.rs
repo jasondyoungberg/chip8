@@ -1,3 +1,4 @@
+#[derive(Debug, Clone, Copy)]
 pub struct Register { x: u8 }
 
 impl Register {

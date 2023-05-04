@@ -1,3 +1,4 @@
+#[derive(Debug, Clone, Copy)]
 pub struct Key { x: u8 }
 
 impl Key {
@@ -7,6 +8,7 @@ impl Key {
     }
 
     pub fn get(&self) -> u8 { self.x }
+    pub fn idx(&self) -> usize { self.x as usize }
 }
 
 impl std::fmt::Display for Key {
@@ -15,17 +17,31 @@ impl std::fmt::Display for Key {
     }
 }
 
-pub struct Keypad();
+#[derive(Debug)]
+pub struct Keypad {
+    keys: [bool; 16],
+}
 
 impl Keypad {
-    pub fn new() -> Self { Keypad() }
+    pub fn new() -> Self {
+        Keypad { keys: [false; 16] }
+    }
+
+    pub fn set_pressed(&mut self, key: Key, pressed: bool) {
+        self.keys[key.idx()] = pressed;
+    }
 
     #[allow(unused_variables)]
     pub fn is_pressed(&self, key: Key) -> bool {
-        todo!()
+        self.keys[key.idx()]
     }
 
     pub fn get_key(&self) -> Option<Key> {
-        todo!()
+        for (i, &pressed) in self.keys.iter().enumerate() {
+            if pressed {
+                return Some(Key::new(i as u8));
+            }
+        }
+        None
     }
 }

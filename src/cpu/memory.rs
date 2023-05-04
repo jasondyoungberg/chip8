@@ -1,12 +1,13 @@
 use crate::cpu::Address;
 
+#[derive(Debug)]
 pub struct Memory {
     data: [u8; 4096]
 }
 
 impl Memory {
     pub fn new() -> Self {
-        Memory { data: [0; 4096] }
+        Memory { data: [1; 4096] }
     }
 
     pub fn write(&mut self, addr: Address, data: &[u8]) {
