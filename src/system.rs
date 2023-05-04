@@ -80,8 +80,7 @@ impl System {
         if DEBUG { println!(); }
     }
 
-    pub fn render(&self) -> String { self.display.render() }
-
+    pub fn get_pixels(&self) -> &[[bool; 32]; 64] { self.display.get_pixels() }
 
 
     fn execute(&mut self, instruction: Instruction) {
