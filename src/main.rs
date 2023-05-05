@@ -68,18 +68,18 @@ fn main() {
 
         let window_size = window.size();
         window.draw_2d(&event, |context, graphics, _device| {
-            const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
-            const GRAY:  [f32; 4] = [0.5, 0.5, 0.5, 1.0];
-            const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
+            let bg  = [0.5, 0.5, 0.5, 1.0];
+            let fg1 = [1.0, 1.0, 1.0, 1.0];
+            let fg2 = [0.0, 0.0, 0.0, 1.0];
 
-            piston_window::clear(GRAY, graphics);
+            piston_window::clear(bg, graphics);
 
             let scale = (window_size.width / 64.0).min(window_size.height / 32.0);
 
             let offset_x = (window_size.width - 64.0*scale) / 2.0;
             let offset_y = (window_size.height - 32.0*scale) / 2.0;
 
-            piston_window::rectangle(BLACK,[offset_x, offset_y, 64.0*scale, 32.0*scale], context.transform, graphics);
+            piston_window::rectangle(fg2,[offset_x, offset_y, 64.0*scale, 32.0*scale], context.transform, graphics);
 
             let pixels = system.get_pixels();
             for (x, row) in pixels.iter().enumerate() {
@@ -87,7 +87,7 @@ fn main() {
                     if *pix {
                         let x = offset_x + (x as f64) * scale;
                         let y = offset_y + (y as f64) * scale;
-                        piston_window::rectangle(WHITE, [x, y, scale, scale], context.transform, graphics);
+                        piston_window::rectangle(fg1, [x, y, scale, scale], context.transform, graphics);
                     }
                 }
             }

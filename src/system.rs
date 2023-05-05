@@ -99,6 +99,7 @@ impl System {
     }
 
     pub fn get_pixels(&self) -> &[[bool; 32]; 64] { self.display.get_pixels() }
+    pub fn get_sound(&self) -> bool { self.sound_timer > 0 }
 
 
     fn execute(&mut self, instruction: Instruction) {
