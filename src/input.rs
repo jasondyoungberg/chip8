@@ -38,3 +38,9 @@ impl Keypad {
         None
     }
 }
+
+impl Default for Keypad {
+    fn default() -> Self {
+        Self::new()
+    }
+}

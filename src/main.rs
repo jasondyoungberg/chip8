@@ -2,16 +2,13 @@ extern crate piston_window;
 
 use piston_window::{PistonWindow, WindowSettings, Event, Loop, Window, Input, Button};
 use std::{fs,env};
-use rand::random;
 
-mod input;
-mod output;
-mod cpu;
-mod system;
+pub mod input;
+pub mod output;
+pub mod cpu;
+pub mod system;
 
 use input::*;
-use output::*;
-use cpu::*;
 use system::*;
 
 const DEBUG: bool = true;

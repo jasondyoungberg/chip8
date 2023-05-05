@@ -7,7 +7,7 @@ pub struct Memory {
 
 impl Memory {
     pub fn new() -> Self {
-        Memory { data: [1; 4096] }
+        Memory { data: [0; 4096] }
     }
 
     pub fn write(&mut self, addr: Address, data: &[u8]) {
@@ -36,5 +36,11 @@ impl Memory {
     pub fn read16(&self, addr: Address) -> u16 {
         ((self.read8(addr) as u16) << 8) |
         (self.read8(addr.add(1)) as u16)
+    }
+}
+
+impl Default for Memory {
+    fn default() -> Self {
+        Self::new()
     }
 }

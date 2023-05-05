@@ -1,4 +1,9 @@
-use super::*;
+use rand::random;
+
+use crate::input::*;
+use crate::output::*;
+use crate::cpu::*;
+use crate::DEBUG;
 
 // https://tobiasvl.github.io/blog/write-a-chip-8-emulator
 // http://www.emulator101.com/chip-8-instruction-set.html
@@ -9,8 +14,8 @@ const CLOCK_HZ: f64 = 500.0;
 
 #[derive(Debug)]
 pub struct System {
-    display: output::Screen,
-    keypad: input::Keypad,
+    display: Screen,
+    keypad: Keypad,
 
     memory: Memory,
     stack: Vec<Address>,
