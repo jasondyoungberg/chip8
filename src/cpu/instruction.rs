@@ -1,5 +1,4 @@
 use crate::cpu::{Address, Register};
-use crate::input::Key;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Instruction {
@@ -26,8 +25,8 @@ pub enum Instruction {
     JumpV0(Address),              // BNNN
     Rand(Register, u8),           // CXNN
     Draw(Register, Register, u8), // DXYN
-    KeyEq(Key),                   // EX9E
-    KeyNeq(Key),                  // EXA1
+    KeyUp(Register),              // EX9E
+    KeyDown(Register),            // EXA1
     GetDelay(Register),           // FX07
     WaitKey(Register),            // FX0A
     SetDelay(Register),           // FX15
@@ -42,7 +41,6 @@ pub enum Instruction {
 impl Instruction {
     pub fn new(data: u16) -> Option<Self> {
         let addr = Address::new(data & 0x0FFF);
-        let key = Key::new(((data & 0x0F00) >> 8) as u8);
         let reg_x = Register::new(((data & 0x0F00) >> 8) as u8);
         let reg_y = Register::new(((data & 0x00F0) >> 4) as u8);
         let num = (data & 0x00FF) as u8;
@@ -77,8 +75,8 @@ impl Instruction {
             (0xB, _ , _ , _ ) => Some(Self::JumpV0(addr)),
             (0xC, _ , _ , _ ) => Some(Self::Rand(reg_x, num)),
             (0xD, _ , _ , _ ) => Some(Self::Draw(reg_x, reg_y, nib4)),
-            (0xE, _ ,0x9,0xE) => Some(Self::KeyEq(key)),
-            (0xE, _ ,0xA,0x1) => Some(Self::KeyNeq(key)),
+            (0xE, _ ,0x9,0xE) => Some(Self::KeyUp(reg_x)),
+            (0xE, _ ,0xA,0x1) => Some(Self::KeyDown(reg_x)),
             (0xF, _ ,0x0,0x7) => Some(Self::GetDelay(reg_x)),
             (0xF, _ ,0x0,0xA) => Some(Self::WaitKey(reg_x)),
             (0xF, _ ,0x1,0x5) => Some(Self::SetDelay(reg_x)),
@@ -119,8 +117,8 @@ impl std::fmt::Display for Instruction {
             Self::JumpV0(a)     => write!(f, "JUMP V0 + ${:03X}", a.get()),
             Self::Rand(x, n)    => write!(f, "RAND V{}, {}", x.get(), n),
             Self::Draw(x, y, n) => write!(f, "DRAW V{}, V{}, {}", x.get(), y.get(), n),
-            Self::KeyEq(k)      => write!(f, "SEQ K{}", k.get()),
-            Self::KeyNeq(k)     => write!(f, "SNE K{}", k.get()),
+            Self::KeyUp(x)      => write!(f, "SKD V{}", x.get()),
+            Self::KeyDown(x)    => write!(f, "SKU V{}", x.get()),
             Self::GetDelay(x)   => write!(f, "MOV V{}, DT", x.get()),
             Self::WaitKey(k)    => write!(f, "WAIT K{}", k.get()),
             Self::SetDelay(x)   => write!(f, "MOV DT, V{}", x.get()),

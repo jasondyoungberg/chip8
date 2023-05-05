@@ -182,11 +182,17 @@ impl System {
                 let collision = self.display.draw(x, y, sprite);
                 self.v[0xF] = collision as u8;
             }
-            Instruction::KeyEq(key) => {
-                if self.keypad.is_pressed(key) { self.pc = self.pc.add(2); }
+            Instruction::KeyUp(reg) => {
+                let key = Key::new(self.v[reg.idx()]);
+                if self.keypad.is_pressed(key) {
+                    self.pc = self.pc.add(2);
+                }
             }
-            Instruction::KeyNeq(key) => {
-                if !self.keypad.is_pressed(key) { self.pc = self.pc.add(2); }
+            Instruction::KeyDown(reg) => {
+                let key = Key::new(self.v[reg.idx()]);
+                if !self.keypad.is_pressed(key) {
+                    self.pc = self.pc.add(2);
+                }
             }
             Instruction::GetDelay(reg) => self.v[reg.idx()] = self.delay_timer,
             Instruction::WaitKey(reg) => {
