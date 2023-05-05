@@ -69,8 +69,8 @@ fn main() {
         let window_size = window.size();
         window.draw_2d(&event, |context, graphics, _device| {
             let bg  = [0.5, 0.5, 0.5, 1.0];
+            let fg0 = [0.0, 0.0, 0.0, 1.0];
             let fg1 = [1.0, 1.0, 1.0, 1.0];
-            let fg2 = [0.0, 0.0, 0.0, 1.0];
 
             piston_window::clear(bg, graphics);
 
@@ -79,7 +79,7 @@ fn main() {
             let offset_x = (window_size.width - 64.0*scale) / 2.0;
             let offset_y = (window_size.height - 32.0*scale) / 2.0;
 
-            piston_window::rectangle(fg2,[offset_x, offset_y, 64.0*scale, 32.0*scale], context.transform, graphics);
+            piston_window::rectangle(fg0,[offset_x, offset_y, 64.0*scale, 32.0*scale], context.transform, graphics);
 
             let pixels = system.get_pixels();
             for (x, row) in pixels.iter().enumerate() {
