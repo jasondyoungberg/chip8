@@ -11,7 +11,7 @@ pub mod system;
 use input::*;
 use system::*;
 
-const DEBUG: bool = true;
+const DEBUG: bool = false;
 
 fn main() {
     let file = env::args().nth(1).expect("No file provided");
