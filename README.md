@@ -10,11 +10,11 @@ This is a chip8 emulator I wrote in rust.
 2. Open this directory
 
 3. Run the command `cargo run --release -- path/to/rom.ch8`  
-(It may take a while to compile the first time)
+(It may take a while to compile for the first time)
 
 ## Included roms
 
-- [cavern.ch8](https://github.com/mattmikolay/chip-8/tree/master/cavern)
+- [cavern.ch8](https://github.com/mattmikolay/chip8/tree/master/cavern)
 - [chipquarium.ch8](https://github.com/mattmikolay/chip-8/tree/master/chipquarium)
 - [delay_timer_test.ch8](https://github.com/mattmikolay/chip-8/tree/master/delaytimer)
 - [heart_monitor.ch8](https://github.com/mattmikolay/chip-8/tree/master/heartmonitor)
