@@ -1,7 +1,7 @@
 extern crate piston_window;
 
 use piston_window::{PistonWindow, WindowSettings, Event, Loop, Window, Input, Button};
-use std::fs;
+use std::{fs,env};
 use rand::random;
 
 mod input;
@@ -14,11 +14,11 @@ use output::*;
 use cpu::*;
 use system::*;
 
-const ROM_FILE: &str = "roms/test.ch8";
 const DEBUG: bool = true;
 
 fn main() {
-    let rom = fs::read(ROM_FILE).unwrap();
+    let file = env::args().nth(1).expect("No file provided");
+    let rom = fs::read(file).unwrap();
     let mut system = System::new(&rom);
 
     let mut window: PistonWindow = WindowSettings::new("Chip8", [640, 320])
@@ -68,9 +68,11 @@ fn main() {
 
         let window_size = window.size();
         window.draw_2d(&event, |context, graphics, _device| {
+            let sound = system.get_sound();
+
             let bg  = [0.5, 0.5, 0.5, 1.0];
-            let fg0 = [0.0, 0.0, 0.0, 1.0];
-            let fg1 = [1.0, 1.0, 1.0, 1.0];
+            let fg0 = if sound {[0.1, 0.0, 0.0, 1.0]} else {[0.0, 0.0, 0.0, 1.0]};
+            let fg1 = if sound {[1.0, 0.9, 0.9, 1.0]} else {[1.0, 1.0, 1.0, 1.0]};
 
             piston_window::clear(bg, graphics);
 

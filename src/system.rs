@@ -166,7 +166,7 @@ impl System {
                 self.v[reg_x.idx()] = self.v[reg_y.idx()] << 1;
             }
             Instruction::SetIdx(addr) => self.i = addr,
-            Instruction::JumpV0(addr) => return self.pc = addr.add(self.v[0].into()),
+            Instruction::JumpV0(addr) => return self.pc = addr.add(self.v[0] as u16),
             Instruction::Rand(reg, num) => {
                 self.v[reg.idx()] = random::<u8>() & num;
             }
@@ -201,12 +201,12 @@ impl System {
             }
             Instruction::Store(reg) => {
                 self.memory.write(self.i, &self.v[..=reg.idx()]);
-                self.i = self.i.add(3);
+                self.i = self.i.add(1 + reg.get() as u16);
             }
             Instruction::Load(reg) => {
                 let data = self.memory.read(self.i, 1 + reg.get() as u16);
                 self.v[..=reg.idx()].copy_from_slice(data);
-                self.i = self.i.add(3);
+                self.i = self.i.add(1 + reg.get() as u16);
             }
         }
 

@@ -128,8 +128,8 @@ impl std::fmt::Display for Instruction {
             Self::AddIdx(x)     => write!(f, "ADD I, V{}", x.get()),
             Self::SetSprite(x)  => write!(f, "CHAR V{}", x.get()),
             Self::StoreBcd(x)   => write!(f, "BCD V{}", x.get()),
-            Self::Store(x)      => write!(f, "MOV [I], ..{}", x.get()),
-            Self::Load(x)       => write!(f, "MOV ..{}, [I]", x.get()),
+            Self::Store(x)      => write!(f, "MOV [I], ..V{}", x.get()),
+            Self::Load(x)       => write!(f, "MOV ..V{}, [I]", x.get()),
         }
     }
 }
