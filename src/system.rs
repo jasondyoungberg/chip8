@@ -10,7 +10,7 @@ use crate::DEBUG;
 // https://en.wikipedia.org/wiki/CHIP-8
 // https://chip-8.github.io/links
 
-const CLOCK_HZ: f64 = 500.0;
+const CLOCK_HZ: f64 = 10000.0; // 10 kHz
 
 #[derive(Debug)]
 pub struct System {
